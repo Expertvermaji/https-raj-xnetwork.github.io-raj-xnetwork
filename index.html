@@ -1,0 +1,209 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .main, .login {
+      color: white;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: url("images/images-1.jpg");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .card {
+      width: 300px;
+      background-color: rgba(0, 0, 0, 0.9);
+      border-radius: 10px;
+      box-shadow: 0 0 15px cyan;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .box {
+      border: 10px solid red;
+      width: 250px;
+      height: 250px;
+      margin: 20px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(255, 0, 0, 0.5);
+    }
+
+    .result {
+      color: white;
+      font-size: 35px;
+      opacity: 1;
+    }
+
+    .input {
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid cyan;
+      border-radius: 5px;
+      width: 80%;
+      color: black;
+    }
+
+    .change, .reset {
+      width: 100px;
+      height: 40px;
+      border-radius: 5px;
+      color: black;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .change {
+      background-color: cyan;
+    }
+
+    .reset {
+      background-color: red;
+      display: none;
+    }
+
+    .hide {
+      display: none;
+    }
+
+    .title {
+      font-size: 30px;
+      font-weight: bold;
+      color: cyan;
+      margin-bottom: 20px;
+    }
+
+    .timer {
+      font-size: 24px;
+      color: cyan;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login" id="login">
+  <div class="title">Login to RAJ-XNETWORK</div>
+  <div class="card">
+    <input type="text" id="username" class="input" placeholder="Username">
+    <input type="password" id="password" class="input" placeholder="Password">
+    <button id="loginButton" class="change">Login</button>
+  </div>
+</div>
+
+<div class="main hide" id="main">
+  <div class="title">RAJ-XNETWORK</div>
+  <div class="timer">Elapsed Time: <span id="elapsedTime">0</span> seconds</div>
+  <div class="card">
+    <div class="box">
+      <p class="result">RESULT</p>
+    </div>
+    <button class="change hide" id="changeButton">CHANGE RESULT</button>
+    <button class="reset">RESET</button>
+  </div>
+</div>
+
+<script>
+  let resultElement = document.querySelector('.result');
+  let resetButton = document.querySelector('.reset');
+  let changeButton = document.getElementById('changeButton');
+  let elapsedTimeElement = document.getElementById("elapsedTime");
+  let elapsedTime = 0; // Total elapsed time
+  let elapsedInterval;
+
+  // Define the result sequence
+  const resultsSequence = [
+    'SMALL', 'BIG', 'SMALL', 
+    'BIG', 'BIG', 
+    'SMALL', 'BIG', 'SMALL', 
+    'SMALL', 'BIG', 'BIG'
+  ];
+
+  let currentIndex = 0;
+
+  const updateResult = () => {
+    if (currentIndex < resultsSequence.length) {
+      const resultText = resultsSequence[currentIndex];
+      resultElement.innerHTML = resultText;
+      resultElement.style.animation = 'fadeInScale 1s forwards';
+      currentIndex++;
+    } else {
+      currentIndex = 0; // Reset index after the last result
+    }
+  };
+
+  const startElapsedTime = () => {
+    elapsedTime = 30; // Start from 30 seconds
+    elapsedTimeElement.innerHTML = elapsedTime;
+
+    clearInterval(elapsedInterval);
+    
+    elapsedInterval = setInterval(() => {
+      elapsedTime--;
+      elapsedTimeElement.innerHTML = elapsedTime;
+
+      if (elapsedTime <= 0) {
+        updateResult(); // Automatically update result
+        elapsedTime = 30; // Reset to 30 seconds
+      }
+    }, 1000);
+  };
+
+  const handleChangeButtonClick = () => {
+    updateResult(); // Change result on button click
+    changeButton.classList.add('hide'); // Hide CHANGE button
+    setTimeout(() => {
+      changeButton.classList.remove('hide'); // Show CHANGE button again after 30 seconds
+    }, 30000);
+  };
+
+  const handleResetButtonClick = () => {
+    currentIndex = 0; // Reset the index
+    resultElement.innerHTML = 'RESULT'; // Reset the result display
+    elapsedTime = 0; // Reset elapsed time
+    elapsedTimeElement.innerHTML = elapsedTime; // Reset display
+  };
+
+  // Login functionality
+  document.getElementById('loginButton').addEventListener('click', () => {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    // Check credentials
+    if (username === 'Raj' && password === 'Bhai') {
+      document.getElementById('login').classList.add('hide');
+      document.getElementById('main').classList.remove('hide');
+      startElapsedTime(); // Start elapsed time after successful login
+    } else {
+      alert('Raj bhai se hack buy kar wo hack denge saste me');
+    }
+  });
+
+  // Add event listeners
+  changeButton.addEventListener('click', handleChangeButtonClick);
+  resetButton.addEventListener('click', handleResetButtonClick);
+</script>
+</body>
+</html>
